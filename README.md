@@ -104,14 +104,26 @@ Data is organized into three MongoDB collections:
 
 | Endpoint | Method | Description |
 |---|---|---|
+| `/get-api-data` | GET | Fetch live data directly from the Instagram/Apify API (no storage) |
 | `/save-api-data` | POST | Fetch & store new data from the Instagram/Apify API |
-| `/save-csv-data` | POST | Load and store the Kaggle CSV dataset |
+| `/save-csv-data` | POST | Load and store the Kaggle CSV dataset (background task) |
+| `/save-filtered-csv-data` | POST | Load, clean & store the enriched CSV dataset (background task) |
+| `/make-integration` | POST | Merge API + CSV data into the integrated/filtered collection |
 | `/get-saved-api-data` | GET | Retrieve stored API data (paginated) |
 | `/get-saved-csv-data` | GET | Retrieve stored CSV data (paginated) |
-| `/api-hashtags/` | GET | Extract hashtags from API data |
-| `/csv-hashtags/` | GET | Extract hashtags from CSV data |
-| `/industry-analysis` | GET | Categorize and aggregate hashtags by industry |
-| `/engagement-over-time` | GET | Track engagement trends over time |
+| `/get-integrated-data` | GET | Retrieve the merged/integrated dataset (paginated) |
+| `/delete-all-api-data/` | DELETE | Clear all stored API data |
+| `/delete-all-csv-data/` | DELETE | Clear all stored CSV data |
+| `/api-hashtags/` | GET | Extract unique hashtags from API data |
+| `/csv-hashtags/` | GET | Extract unique hashtags from CSV data |
+| `/api-hashtags/count/` | GET | Count occurrences of each hashtag (API data) |
+| `/csv-hashtags/count/` | GET | Count occurrences of each hashtag (CSV data) |
+| `/api-hashtags/sorted/` | GET | Hashtags from API data, ranked by frequency |
+| `/csv-hashtags/sorted/` | GET | Hashtags from CSV data, ranked by frequency |
+| `/csv-hashtags-likes/sorted/` | GET | Posts sorted by likes / retweets / replies |
+| `/industry-analysis` | GET | Aggregate engagement by industry (Tourism, Sports, Tech, Fashion, Entertainment) |
+| `/engagement-over-time/` | GET | Track engagement trends over time |
+| `/report` | POST | Generate an automated data-profiling report (pandas-profiling) |
 | `/check_data_quality` | POST | Run an automated data quality check on required fields |
 
 Full interactive docs available at `/docs` once the server is running (Swagger UI).
@@ -124,9 +136,12 @@ Full interactive docs available at `/docs` once the server is running (Swagger U
 |---|---|
 | `main.py` | FastAPI app entry point, router registration, server startup |
 | `main_router.py` | Global API router definition |
+| `router.py` | All social media API endpoints (fetch, save, query, analyze) |
+| `helper.py` | Core logic — API fetching, CSV loading, hashtag extraction, data integration |
 | `db_connection.py` | MongoDB (Motor async) connection setup |
 | `date_time.py` | Timestamp helpers for record creation/updates |
 | `responses.py` | Standardized API response formatting |
+| `mock.py` | Sample/mock API response data used during development |
 | `requirements.txt` | Python dependencies |
 | `Hashtag_Virality_and_Engagement_Analysis_Report.pdf` | Full academic report |
 | `Hashtag_Virality_and_engagement_ppt.pdf` | Summary slide deck |
